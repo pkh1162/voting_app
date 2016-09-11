@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        <title>New Poll : VotingApp</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    </head>
+    
+    
+    
+    <body>
+        
+        <h1>Make a new poll!</h1>
+        <form action="/apiCall/polls" method="post">
+            <label>Poll Question:</label>
+            <input type="textarea" name="pollQuestion"/>
+            <br/>
+            <div id="options">
+                <label>Options</label>
+                <input type="textarea" name="option"/>
+                <input type="textarea" name="option"/>
+                    
+            </div>
+          
+            <br/>
+            <button id="addPoll" type="submit">submit</input>
+            
+            
+        </form>
+        
+            <button id="addOption">Add Option</button>
+            
+            <button id="removeOption">Remove Option</button>        
+
+        
+        <button type="submit" class="btn" id="testAdd">test add</button>
+        
+        <p id="optionWarning"></p>
+        <p id="noOfOptions"></p>
+        
+        
+        <script type="text/javascript" src="common/ajax-functions.js"></script>
+        <script type="text/javascript" src="controllers/newPollController.client.js"></script>
+        
+    </body>
+</html>

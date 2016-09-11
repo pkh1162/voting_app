@@ -1,0 +1,21 @@
+{
+  "name": "vote",
+  "version": "1.0.0",
+  "description": "voting app using clementine for freecodecamp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "pkh1162",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "express-session": "^1.14.1",
+    "mongoose": "^4.6.0",
+    "passport": "^0.3.2",
+    "passport-github": "^1.1.0"
+  }
+}
