@@ -11,7 +11,11 @@ var Poll = new Schema({
         pollId : String,
         pollName : String,
         pollOptions : [String],
-        pollVotes : [Number]
+        pollVotes : [Number],
+        votes : [{
+            opt : String,
+            nbrVotes : Number
+        }]
     }
 });
 

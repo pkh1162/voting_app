@@ -7,79 +7,36 @@ var Users = require("../models/users.js");
 function UserPollHandler () {
 	
 	
-	/*
-	function optionsToArray (optionsParams) {
-		var arr = [];
-		
-		for (var key in optionsParams){
-			if(optionsParams.hasOwnProperty(key)){
-				arr.push(optionsParams[key]);
-			}
-		}
-	//	arr.shift();		//remove question, leave only options in the array.
-		arr = arr.join(",").split(",");
-		return arr;
-	}
-	*/
-	
-	
-	function optionsToArray (optionsParams) {
-		var arr = [];
-		console.log("in new optionsParams")
-		for (var i in optionsParams){
-			arr.push(optionsParams[i]);
-		}
-		console.log(arr);
 
-		return arr;
-		
-	}
-	
-	
-	
-	function initVotes (optionsLength){
-		var voteArr = [];
-		for (var i = 0; i<optionsLength; i++){
-			voteArr.push(0);
-		}
-		return voteArr;
-	}
-    
     this.getPolls = function(req, res) {
-        console.log("in get polls");
+      
         Users.findOne({"github.id" : req.user.github.id}, {"_id" : false}).populate("userPolls.poll").exec(function(err, result){
+            
             if (err){
                 console.log("error with getting polls");
                 throw err;
             }
             
-            console.log("should get polls successfully");
-            //res.json(result.nbrPolls);
-         //   console.log(result);
-             res.json(result);
-             console.log("after json send");
+             res.json(result.userPolls.poll);
         });
     }
     
     
+  
     
     this.getSinglePoll = function(req, res){
-    	Users
-    		.findOne({"github.id" : req.user.github.id}, {"_id" : false}).populate("userPolls.poll").exec(function(err, result){
-    			
-    			if (err){
-    				throw err
+    	
+    	Poll	
+    		.findOne({"_id" : req.params.pollId}).exec(function(err, pollFound){
+    			if(err){
+    				throw err;
     			}
-    				console.log("theoretically the pollId:" + req.params.pollId);
-    				var recievedPollId = req.params.pollId.slice(-1);
-   // 			console.log(result.userPolls.poll[req.param.pollId])
-					//console.log("type before send to json: " + typeof result.userPolls.poll[recievedPollId].pollData);
-	  			    console.log("after slice");
-				//	res.json(result);
-				    console.log(result.userPolls.poll[recievedPollId].pollData.pollOptions)
-    				res.json(result.userPolls.poll[recievedPollId]);			
+    			res.json(pollFound);
     		})
     }
+    
+    
+    
     
     
     this.getNewPoll = function(req, res) {
@@ -92,181 +49,236 @@ function UserPollHandler () {
     }
     
     
-    this.addPoll = function (req, res) {
-		Users
-			.findOneAndUpdate({ 'github.id': req.user.github.id }, 
-			{ $inc: { 'nbrPolls.polls': 1 }}
-			)
-			.exec(function (err, result) {
-					if (err) { throw err; }
-					
-					console.log("after inc, before newPoll init");
-					var newPoll = new Poll();
-					newPoll.user.id = result.github.id;
-					newPoll.pollData.pollId = result.nbrPolls.polls;
-					newPoll.pollData.pollName = req.body.pollQuestion;
-					
-					console.log(req.body);
-					console.log("before newPoll arrays");
-					newPoll.pollData.pollOptions = optionsToArray(req.body.option);
-					newPoll.pollData.pollVotes = initVotes(newPoll.pollData.pollOptions.length);
-					console.log("after new pollarray");
-					
-					newPoll.save(function(err, pollResult){
-					    if (err){
-					        throw err;
-					    }
-					    
-					    
-					    
-					    console.log("new poll saved");
-					    
-					    Users
-					        .findOneAndUpdate({"github.id" : req.user.github.id}, {$push : {"userPolls.poll" : pollResult}})
-					        .exec(function(err, user){
-					            if (err){
-					                throw err;
-					            }
-					            
-					         console.log(user);
-					         console.log("poll pushed");
-					         
-					         Users.findOne({"github.id" : req.user.github.id}, {"_id" : false}).populate("userPolls.poll").exec(function(err, query){
-					             if (err){
-					                 throw err;
-					             }
-					             
-					             console.log("populated");
-					             
-					           
-					             res.json(query);
-					             console.log("pushed query");
-					         })
-					         
-					         
-					         
-					            
-					            
-					        })
-					
-					    
-					})
-					
-					
-					
-					
-					
-					
-				
-			
-					
-				}
-			);
-	};
-	
-	
-	/*
-	this.addVote = function(req, res){
-		Users.findOne({"github.id" : req.user.github.id}).populate("userPolls.poll").exec(function(err, result){
-			
-			if (err){
-				throw err;
-			}
-			console.log("params: " + req.params.optionId + ":  and the pollId: " + req.params.pollId);
-			console.log(result.userPolls.poll);
-			res.json(result);
-			
-		})
-	}
-	*/
-	
-	
+    
+    this.addPoll = function(req, res, next){
+    	
+    	Users.findOne({"github.id" : req.user.github.id}).exec(function(err, user){
+    		console.log(req.body);
+    		
+    		var newPoll = new Poll();
+    		
+    		newPoll.pollData.pollName = req.body.pollQuestion;
+    		newPoll.pollData.pollId = newPoll._id;
+    		
+    		var setOptions = function(options){
+    			
+    			var arr = [];
+    			
+    			for (var key in options){
+    				var voteObj = {};
+    				voteObj = {
+    					opt : options[key],
+    					nbrVotes : 0
+    				};
+    				arr.push(voteObj);
+    			}
+    			
+    			return arr;
+    		}
+    		
+    		newPoll.user.id = req.user.github.id
+    		newPoll.pollData.votes = setOptions(req.body.option)
+    		newPoll.save(function(err, savedPoll){
+    			console.log(newPoll);
+    		    console.log(newPoll.pollData.votes);
+    		    //newPoll.pollData.votes = 
+                //res.json(savedPoll);	
+    		
+    		    
+    		    Users    
+    		       .findOneAndUpdate({"github.id" : req.user.github.id}, {$push : {"userPolls.poll" : savedPoll}, $inc:{"nbrPolls.polls" : 1}})
+    		          .populate("userPolls.poll").exec(function(err, result){
+    		          	if (err){
+    		          		throw err;
+    		          	}
+    		          	
+    		          	
+    		          	next();
+    		          //	res.json(result);
+    		          })
+    		
+    		
+    		
+    			
+    		})
+    		
+    		
+    	})
+    	
+    	
+    }
+    
+    
+    this.addingOne = function(req, res){
+    	Poll
+				.findOneAndUpdate({_id : req.params.pollId}, {$inc : {"pollData.votes.0.nbrVotes" : 1}}).exec(function(err, incrementedData){
+						
+						if(err){
+							throw err;
+						}
+						console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
+						console.log(incrementedData);
+						res.json(incrementedData);
+						
+					})	
+    }
 	
 	this.addVote = function(req, res){
-		var updateVotes = {};
-		var optionChosen = req.params.optionId;
-	    var pathToOptionPicked = "pollData.pollVotes." + optionChosen;
-		updateVotes[pathToOptionPicked] = 1;			//Query to increment vote option by 1
+		
 	
-		Poll.findOneAndUpdate({_id : req.params.pollId}, { $inc : updateVotes})
-		     .exec(function(err, pollData){
+	
+		
+	
+	
+	
+	
+		console.log("Params sent with addVote are:  " + req.params.optionId + "::     and pollId:   " + req.params.pollId);
+		
+		
+		var optionChosen = req.params.optionId
+		var pollId = req.params.pollId;
+	    
+	
+		Poll.findOne({_id : pollId})
+		     .exec(function(err, pollFound){
 		     	if(err){
 		     		throw err;
 		     	}
 		     	
+		     	var indexOfPick = 999;
+				for (var i in pollFound.pollData.votes){
+					if(pollFound.pollData.votes[i]._id == optionChosen){
+						console.log("you picked this: " + optionChosen);
+						indexOfPick = i;
+					}
+				}
+				
+				//console.log("lfjkfdlkjfd");
+				console.log("your pick is at index: " + indexOfPick);
+				
+				
+				var updateQuery = {};
+	    		var pathToOptionPicked = "pollData.votes." + indexOfPick.toString() + ".nbrVotes";
+				updateQuery[pathToOptionPicked] = 1;			//Query to increment vote option by 1
+				
+						
+				
+				Poll
+					.findOneAndUpdate({_id : pollId}, {$inc : updateQuery}).exec(function(err, incrementedData){
+						
+						if(err){
+							throw err;
+						}
+						console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
+						console.log(incrementedData);
+						res.json(incrementedData);
+						
+					})
+				
+				
+				
+		    // 	console.log(pollData.pollData.votes.find(x=> x._id == "57d6c174002dfd0861904c63").nbrVotes);
 		     	
-		     	res.json(pollData);
-		     	//console.log(pollInc.pllData);
-		     /*	
-		     	
-		     	console.log(req.params.optionId);
-		     	console.log(req.params.pollId);
-		     	console.log(typeof req.params.optionId);
-		     	console.log(result.pollData.pollVotes);
-		     	console.log(result.pollData.pollVotes[req.params.optionId]);
-     //         	result.pollData.pollVotes[req.params.optionId] = 3;
-              	console.log(result.pollData.pollVotes[req.params.optionId]);
-                result.pollData.pollVotes.update({ $inc : {"0" : 1}});
-            //    result.save(function(err, pollInc){
-            //    if (err){
-            //    	throw err;
-            //    }
-                //Update the user with this poll as well.
-               */
-               
-               
-               /*
-                Users.findOne({"github.id" : pollInc.user.id}).populate("userPolls.poll").exec(function(err, userDoc){
-                	
-                	if(err){
-                		throw err;
-                	}
-                	
-                	
-					var chosenPollsId = pollInc.pollData.pollId;
-					var pollVoteArray = pollInc.pollData.pollVotes.toObject();
-
-
-                //	userDoc.userPolls.poll[pop].pollData.pollVotes = pollInc.pollData.poleVotes;
-                  	userDoc.userPolls.poll[chosenPollsId].pollData.pollVotes = pollVoteArray;
-
-                	console.log("The new user poll votes: " + userDoc.userPolls.poll[chosenPollsId].pollData.pollVotes);
-                	userDoc.save(function(err, finalResult){
-                		if (err){
-                			throw err;
-                		}
-                		console.log(finalResult);
-                		res.json(finalResult);
-                	})
-                
-                })
-                
-               */
-                	
-             //   })
 		     
-		     	
+		   
+		     
 		     })
+	
+
+	
 	}
 	
 	
+    this.getallpolls = function(req, res) {
+    	
+    	Poll
+    	    .find({}).exec(function(err, polls){
+    	    	
+    	    	if(err)
+    	    	{
+    	    		throw err;
+    	    	}
+    	    	
+    	    	res.json(polls);
+    	    	
+    	    })
+    }
 
-
-    
-    
     this.deletePoll = function(req, res){
+    	
+    	console.log("this is the delted poll id", req.params.pollId);
         Poll
-        	.findOne({"pollData.pollId" : 0}).remove().exec(function(err, result){
+        	.findOne({"_id" : req.params.pollId}).remove().exec(function(err, result){
         		
-        		console.log(result);
         		if (err){
         			throw err;
         		}
         		
-        		res.json(result);
+        		
+        		Users.update({"github.id" : req.user.github.id},
+        		{$inc : {"nbrPolls.polls": -1}}).exec(function(err, user){
+        			if(err){
+        				throw err;
+        			}
+        			
+        			console.log("hello");
+        			res.json(result);
+        			
+        		})
+        		
         	})
         
     }
+    
+    
+    
+    this.notify = function(req, res){
+    
+    	console.log("The notification is:" + req.params.idea + req.params.pollId);
+    	//find poll. Get user id.
+    	//use user id to get user.
+    	//update users notifications with req params.
+    	
+    	Poll.findOne({"_id" : req.params.pollId}).exec(function(err, poll){
+    		if(err){
+    			throw err;
+    		}
+    		
+    		var notification = {
+    			"message"  : req.params.idea,
+    			"pollId"   : req.params.pollId
+    		}
+    		
+    		var userGitId = poll.user.id;
+    		
+    		Users.findOneAndUpdate({"github.id" : userGitId}, {$push : {"notifications" : notification}})
+    			.exec(function(err, updatedNotifications){
+    				if(err){
+    					throw err;
+    				}
+    				console.log(updatedNotifications);
+    				
+    				res.json({});		
+    			})
+    		
+			
+    		
+    	})
+    	
+    	
+    }
+	
+	
+	this.getNotifications = function(req, res){
+		Users.findOne({"github.id" : req.user.github.id}).exec(function(err, result){
+			if(err){
+				throw err;
+			}
+			
+			res.json(result.notifications);
+			
+		})
+	}   
 }
 
 

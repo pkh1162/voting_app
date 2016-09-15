@@ -20,12 +20,13 @@ module.exports = function (app, passport) {
     var userPollHandler = new UserPollHandler();
     var clickHandler = new ClickHandler();
 
-
+/*
     app.route("/home")
         .get(function(req, res){
             res.sendFile(path + "/public/home.html");
         })
-        
+  */
+  
     app.route("/myProfile")
         .get(isLoggedIn, function(req, res){
             res.sendFile(path + "/public/myProfile.html");
@@ -95,21 +96,45 @@ module.exports = function (app, passport) {
 		
 	app.route("/apiCall/polls")
 	    .get(userPollHandler.getPolls)
-	    .post(userPollHandler.addPoll)
+	    .post(userPollHandler.addPoll, function(req, res, next){
+	        res.redirect("/myProfile");
+	    })
 	    .delete(userPollHandler.deletePoll);
     //	.get(isLoggedIn, userPollHandler.getPolls)
     //	.post(isLoggedIn, userPollHandler.addPoll)
     //	.delete(isLoggedIn, userPollHandler.deletePoll);
+    
+    app.route("/getPolls")
+        .get(userPollHandler.getallpolls);
 		
-	app.route("/deletePoll/:0")
-	    .get(userPollHandler.deletePoll)
+	app.route("/deletePoll/:pollId")
+	    .delete(userPollHandler.deletePoll)
 		
 	app.route("/getSingle/:pollId")
 	    .get(userPollHandler.getSinglePoll);
 	    
 	    
 	app.route("/voteInc/:optionId/:pollId")
-	    .get(userPollHandler.addVote);
+	    .post(userPollHandler.addVote);
+	    
+	    
+	app.route("/editPoll/:pollId")
+	    .get(isLoggedIn, function(req, res){
+	        res.sendFile(path + "/public/editPoll.html")
+	    })
+	    
+	app.route("/home")
+	    .get(function(req, res){
+	        res.sendFile(path + "/public/homePage.html");
+	    })
+	    
+	    
+	 app.route("/sendSuggestion/:idea/:pollId")
+	    .post(userPollHandler.notify);
+	        
+	 app.route("/getNotifications")
+	    .get(userPollHandler.getNotifications);
+	        
 	    
 	    
 };

@@ -1,62 +1,41 @@
 "use strict";
 
 
-
     
 
 (function(){
     
-    var voteInc = appUrl + "/voteInc/";
+    var voteIncUrl = appUrl + "/voteInc/";
     
     
     
     var showVotes = function(data) {
         var jsonData = JSON.parse(data);
-        console.log("juniper");
-        console.log("data: " + data);
-        console.log("jsonData: " + jsonData);
-        var id = jsonData.pollData.pollId;
-        var t = document.createTextNode(jsonData.pollData.pollVotes);
-        document.body.appendChild(t);
+      //  var t = document.createTextNode();
+        $("#votes").empty();
+        $("#votes").html(JSON.stringify(jsonData.pollData.votes));
+    //    document.body.appendChild(t);
         
-        
-       // ajaxFunctions.ajaxRequest("GET", appUrl + "/getSingle/" + id, showPoll)       showPoll can't be accessed here/
-;    }
-    
-    /*
-    $("#optionButtons").on("change", function(){
-        $(".pollOptions").on("click", function(){
-            var id = $(this).attr("id").slice(-1);
-            var pollId = $(this).attr("pollid");
-            console.log("this is the button id pressed: " + id);
-            console.log("This is is the pollId:" + pollId);
-            console.log(voteInc);
-            ajaxFunctions.ajaxRequest("GET", voteInc + id + "/" + pollId, showVotes);
-        })
-    })
-    */
-    
-   /* 
-    $("#optionButtons").on("click", function(){
-        $(".pollOptions").on("click", function(){
-            console.log("i hope it is alive");
-        })
-    })
-    */
-    
+    }
+
+
     $(".pollOptions").on("click", function(){
-        var id = $(this).attr("id").slice(-1);
-        var pollId = $(this).attr("pollid");
-        console.log("this is the button id pressed: " + id);
-        console.log("This is is the pollId:" + pollId);
-        console.log(voteInc);
-        ajaxFunctions.ajaxRequest("GET", voteInc + id + "/" + pollId, function(pop){
-            console.log("rupert");
+        var optionId = $(this).attr("optionId").slice(3);       //Slice 'opt' from optionId. (it is in form: opt57d6c1d6002dfd0861904c64)
+        var pollId = $(this).attr("pollId").slice(4);           //Slice 'poll' from pollId.
+       
+        console.log(voteIncUrl);
+        
+        ajaxFunctions.ajaxRequest("POST", voteIncUrl + optionId + "/" + pollId, function(pop){
             var data = JSON.parse(pop);
             ajaxFunctions.ajaxRequest("GET", appUrl + "/getSingle/" + data.pollData.pollId, showVotes)
         });
-        console.log("It's aliiiiiiiivvvvvvveee!!!");
+      
     })
+    
+    
+   
+    
+    
 
 
 

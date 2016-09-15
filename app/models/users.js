@@ -16,13 +16,19 @@ var User = new Schema({
     },
     nbrPolls : {
         polls : Number
+        //Can provide validator function to limit no of polls, or ensure no negatives.
     },
    userPolls : {
       poll : [{
           type : mongoose.Schema.ObjectId,
           ref : "Poll"
         }]
-    }
+    },
+    
+    notifications : [{
+        message : String,
+        pollId : String
+    }]
     
 });
 
