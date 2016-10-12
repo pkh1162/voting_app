@@ -109,6 +109,7 @@ function UserPollHandler () {
     }
     
     
+    
     this.addingOne = function(req, res){
     	Poll
 				.findOneAndUpdate({_id : req.params.pollId}, {$inc : {"pollData.votes.0.nbrVotes" : 1}}).exec(function(err, incrementedData){
@@ -124,13 +125,6 @@ function UserPollHandler () {
     }
 	
 	this.addVote = function(req, res){
-		
-	
-	
-		
-	
-	
-	
 	
 		console.log("Params sent with addVote are:  " + req.params.optionId + "::     and pollId:   " + req.params.pollId);
 		
@@ -215,14 +209,24 @@ function UserPollHandler () {
         		}
         		
         		
-        		Users.update({"github.id" : req.user.github.id},
+        		Users.findOneAndUpdate({"github.id" : req.user.github.id},
         		{$inc : {"nbrPolls.polls": -1}}).exec(function(err, user){
         			if(err){
         				throw err;
         			}
         			
-        			console.log("hello");
-        			res.json(result);
+        			console.log("in decrement");
+        			var filterDelNotes = user.notifications.filter((note) => note.pollId !== req.params.pollId);
+        			console.log("after filter");
+        			Users.findOneAndUpdate({"github.id" : req.user.github.id},{ $set : {"notifications" : filterDelNotes}}).exec(function(err, r){
+        				console.log("this is r: ", r);
+        		
+        		        console.log("hello");
+        			    res.json(r);
+        		
+        		
+        			});
+        		
         			
         		})
         		
@@ -279,6 +283,146 @@ function UserPollHandler () {
 			
 		})
 	}   
+	
+	
+	this.getSuggestions = function(req, res){
+		Users.findOne({"github.id" : req.user.github.id}).exec(function(err, result){
+			if(err){
+				throw err;
+			}
+			
+		
+			
+			var pollSuggestions = result.notifications.filter((note) => note.pollId === req.params.pollId);
+			res.json(pollSuggestions);
+			
+		})
+	}   
+	
+	
+	this.implementNote = function(req, res){
+		
+		//Get correct user
+			//get correct note
+				//find correct poll
+				//push this option into poll.pollData.votes
+					//if successful, delete this suggestion
+			
+		
+		Users.findOne({"github.id" : req.user.github.id}).exec(function(err, user){
+			
+			if (err){
+				throw err;
+			}
+			
+			//get the correct note
+			
+			var note = user.notifications.filter((note) => note._id == req.params.noteId)[0];
+		
+		
+			var pollId = note.pollId;
+		
+			
+			
+			//convert note into option
+			
+			var newOption = {
+				opt : note.message,
+				nbrVotes : 0
+			}
+			
+			
+	
+			
+			Poll.findOneAndUpdate({"_id" : pollId}, {$push : {"pollData.votes" : newOption}}).exec(function(err, poll){
+				
+				if (err){
+					throw err;
+				}
+			
+				res.json(poll);
+				
+			})
+			
+			
+			
+			
+			
+			
+		})
+		
+			
+			
+	}
+	
+	
+	
+	this.addOption = function(req, res){
+		
+		var newOption = {
+				opt : req.params.message,
+				nbrVotes : 0
+			}
+		
+    	
+    		Poll.findOneAndUpdate({"_id" : req.params.pollId}, {$push : {"pollData.votes" : newOption}}).exec(function(err, poll){
+				
+				if (err){
+					throw err;
+				}
+			
+				res.json(poll);
+				
+			})
+    	
+    }
+	
+	
+	
+	this.deleteNote = function(req, res){
+		
+		//find user
+			//find note and delete it.
+			console.log("in the deleteNote function");
+		
+		Users.findOne({"github.id" : req.user.github.id})
+			.exec(function(err, user){
+				
+				if (err){
+					throw err;
+				}
+				
+		
+				var newNotes = user.notifications.filter((note) => note._id != req.params.noteId);
+				
+				
+				
+				console.log("new notes are", newNotes);
+				
+				
+				Users.findOneAndUpdate({"github.id" : req.user.github.id}, {$set : {notifications : newNotes}})
+					.exec(function(err, updatedNotes){
+						
+						if (err){
+							throw err;
+						}
+						
+						console.log("I think I pulled the notification :)");		
+						res.json(updatedNotes);				
+						
+					});
+				
+				
+				
+						
+			})
+		
+		
+		
+	}
+	
+	
+	
 }
 
 

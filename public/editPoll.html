@@ -10,10 +10,31 @@
     
     <body>
         
-        <div id="pollToEdit">
+       <h1>Edit Poll</h1>
+        <form action="/apiCall/polls" method="post">
+            <label>Poll Question:</label>
+            <input id="pollQ" type="textarea" name="pollQuestion"/>
+            <br/>
+            <div id="options">
+                <label>Options</label>
+                  
+            </div>
+          
+            <br/>
+            <button id="addPoll" type="submit">submit</input>
             
             
-        </div>
+        </form>
+        
+            <button id="addOption">Add Option</button>
+            
+            <button id="removeOption">Remove Option</button>        
+
+        
+        <button type="submit" class="btn" id="testAdd">test add</button>
+        
+        <p id="optionWarning"></p>
+        <p id="noOfOptions"></p>
         
         
     </body>

@@ -30,6 +30,9 @@ var User = new Schema({
         pollId : String
     }]
     
+    //suggestion added on home page: user accessed.
+    //poll deleted profile page: 
+    
 });
 
 module.exports = mongoose.model("User", User);

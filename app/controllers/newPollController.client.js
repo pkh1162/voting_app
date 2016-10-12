@@ -39,32 +39,68 @@
         
     }
     
+    
+    $("input[type=textarea]").on("blur", function(){
+      //  $("#options").append("<div>this is awesome</div>");
+      
+    })
+    
   
-    addOption.addEventListener("click", function(){
+    $("#addOption").on("click", function(event){
+       event.preventDefault();
         if (getOptionLength => 2){
             $("#optionWarning").text("");
-
         }
+        
         $("#options").append("<input type='textarea' name='option'/>");
-        showOptions();
-    });
+        
+    })
     
-     removeOption.addEventListener("click", function(){
+     $("#removeOption").on("click", function(){
+        event.preventDefault();       
         if (getOptionLength() <= 2){
             fewOptionWarning();
         }
         else{
             $("#options input").last().remove();
-            showOptions();    
         }
         
     });
+    
+    $("#addPoll").on("click", function(event){
+      
+        $("input").css("box-shadow", "none");
+        
+        if ($(".question").val().trim() === ""){
+                event.preventDefault();
+                console.log($(".question").val());
+                $(".question").css("box-shadow", "0px 0px 20px 5px red");
+                addWarning(".question");
+                
+        }
+        
+        $("input[name=option]").each(function(i, opt){
+            if ($(opt).val().trim() == ""){
+                event.preventDefault();
+                console.log("You need to enter something");
+                $(opt).css("box-shadow", "0px 0px 20px 5px red");
+                addWarning(opt);
+            }
+        })
+        
+    })
+    
+    
+    function addWarning (element){
+        $(element).val("");
+        $(element).attr("placeholder", "You need to enter something here");
+    }
   
     
-    testAdd.addEventListener('click', function () {
-        ajaxFunctions.ajaxRequest('POST', pollApiUri, random);
+   // testAdd.addEventListener('click', function () {
+   //     ajaxFunctions.ajaxRequest('POST', pollApiUri, random);
 
-   }, false);
+  // }, false);
     
     
     

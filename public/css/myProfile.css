@@ -10,29 +10,23 @@
 }
 
 .navbar {
-    min-width: 330px;
-       font-family: 'Open Sans', sans-serif;
+   min-width: 330px;
+   font-family: 'Open Sans', sans-serif;
 }
 
 .navbar-brand {
     color: white !important;
     font-size: 22pt  !important;
     font-family: 'Sansita One', cursive !important;
-
-}
-
-h3 {
-     font-family: 'Sansita One', cursive !important;
-}
-
-
-.option, .publicPoll {
-    font-family: 'Open Sans', sans-serif;
 }
 
 body {
     padding:0px;
     margin:0px;
+}
+
+h3 {
+     font-family: 'Sansita One', cursive !important;
 }
 
 
@@ -62,17 +56,23 @@ body {
    
 }
 
-.publicPoll {
+.myPoll {
     color: #337ab7;
     font-size: 14pt;
     padding: 30px;
+    display: inline-block;
     
 }
 
 
-#publicPolls li :hover, #publicPolls li :focus{
+#userPolls .myPoll :hover, #publicPolls li :focus{
     background: white;
 }
+
+#userPolls li button :hover{
+    background: blue;
+}
+
 
 
 #selectedPoll span {
@@ -102,10 +102,12 @@ body {
     transform: scale(2);
     background: green;
     color: white;
-    
-    
 }
 
+
+.option, .myPoll {
+    font-family: 'Open Sans', sans-serif;
+}
 
 
 #selectedPoll p {
@@ -121,11 +123,14 @@ body {
     text-align: center;
     width: 90%;
     min-width: 350px;
-
+    display: none;
 }
+
+
 
 #sugOption, #tick {
     height: 80px;
+    text-align: center;
 }
 
 
@@ -148,6 +153,27 @@ body {
 
 
 
+
+
+/*----------------------------*/
+
+.pollButtons {
+    margin-bottom: 20px;
+    }
+    
+    
+#suggestions {
+    width:100%;
+    display: block;
+}
+    
+#tick {
+    width: 80%;
+    height: 40px;
+    margin-bottom: 10px;
+}    
+
+
 .glyphicon-plus {
     border: #337ab7 1px solid;
     padding: 10px;
@@ -164,4 +190,9 @@ body {
     background:  #337ab7;
     color: white;
     margin-top: 10px;
+}
+
+.navbar-inverse .navbar-nav>.active>a {
+    color: #337ab7 !important;
+    background-color: white !important;
 }

@@ -4,58 +4,147 @@
     <head>
         <title>Profile Page - VotingApp</title>
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+           <link href="/public/css/myProfile.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Sansita+One" rel="stylesheet">       
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+       
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
     
     <body>
-        <h1><span id="userName"></span>'s profile page</h1>
         
-        <div id="myPolls">
+          <div class="container-fluid">
+              <nav class="navbar navbar-inverse">
+                  <div class="container-fluid">
+                    <div class="navbar-header">
+                         <a class="navbar-brand" href="/home">Polls</a>
+                          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapseThese" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+                    </div>
+                  
+                    
+                    <ul class="nav navbar-nav collapse navbar-collapse" id="collapseThese">
+                   
+                        <li class="active" data-toggle="tab"><a href="/myProfile"><span id="userName"></span> Polls</a></li>                   
+                        <li class="dropdown" data-toggle="tab">
+                        <a href="#" class="dropdown-toggle getNotifications" id="showNotifications" data-toggle="dropdown" type="button">Notifications <span class="nbrNotifications badge"></span><span class="caret"></span></a>
+                        <ul class="dropdown-menu notificationDropdown" aria-labelled-by="showNotifications">
+                        </ul>
+                        </li>
+                        
+                        <li><a href="/newPoll">New Poll</a></li>
+                         <li>  <a href="/logout">Sign Out</a></li>
+                 
+                        
+                    </ul>
+                    
+                  <!-- 
+                   <li class="dropdown">
+                            <button id="lope" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="getNotifications dropdown-toggle">
+                                Notifications: <span class="nbrNotifications"></span><span class="caret"></span>
+                            </button>
+                        </li>
+                   
+                   -->
+                    
+                   
+                  </div>
+                </nav>
+                                    
+                                                                                                                                                                                                                  
+             
             
-        </div>
+            
+            <div class="row">
+                
+                <div id ="pollList" class="col-xs-12 col-sm-6">
+                    
+                     <h3 class="pollsHeader">Polls</h3>
+                    <ul id="userPolls" class="nav nav-pills nav-stacked">
+                      
+                      
+                    </ul>
+                                        
+                                  
+                </div>
+                
+                
+                <div id ="pollDisplayed" class="col-xs-12 col-sm-6">
+                    
+                    <h3 class="selPollTitle">Title</h3>
+                    <div class="pollSlider">
+                    <div id="googleChart">
+                    </div>
+                    
+                   <div id="selectedPoll" class="btn-group-vertical" role="group" aria-label="...">
+                       
+                   </div>
+                    
+                    
+                    <div>
+                        <div id="suggestions">
+                           
+                           
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <div>
+                        <div id="suggestOption">
+                            <label><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </label>
+                            <div class="input-group" id="suggestions">
+                            <div id="addNewOption"></div>
+                        
+                            </div>
+                            <label class="rmvSuggestions"></label>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    </div>
+                    
+                </div>
+                
+                
+                
+                
+                
+                
+                
+                
+            </div>
+            
+      
         
-        <div id="selectedPoll">
-            
-            
-            
-            
+        
+        
+     
+        
+        
+        
+        
+        
         </div>
+
+        
+        
         
        
-        <div id="optionButtons">
-            
-        </div>
-        
-        
-        <div id="votes">
-            
-            
-            
-        </div>
-        
-        <div id="newPoll">
-            <a href="/newPoll">
-                <button class="btn">New Poll?</button>
-            </a> 
-        </div>
-        <div id="removePoll">
-            <button id="" class="rmvPollBtn">Remove Poll</button>
-        </div>
-        
-        <div id="editPoll">
-            <a href="/editPoll/jljl">
-                <button id="" class="editBtn">Edit Poll</button>
-            </a>
-        </div>
-        
-        <div class="notifications">
-            <button class="getNotifications">Notifications: <span class="nbrNotifications"></span></button>
-        </div>
-        
-        
+          
         
     </body>
+   
     
     <script type="text/javascript" src="/common/ajax-functions.js"></script>
+      <script type="text/javascript" src="/common/googleCharts.js"></script>
     <script type="text/javascript" src="/controllers/userVoteController.client.js"></script>
    <!-- <script type="text/javascript" src="/controllers/userPollInteractController.client.js"></script> -->
     

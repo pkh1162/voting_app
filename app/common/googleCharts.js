@@ -51,17 +51,20 @@ var prepareTheData = function(chartData, element, type){
         //data.addRow(x);
        
         // Set chart options
-        var options = {'title':chartData.pollData.pollName,
-                       'width':400,
-                       'height':300};
+        var options = {
+                       'width':"100%",
+                       'height':"100%",
+                        colors: ['#337ab7', '#eee', 'red', 'green', 'yellow'],
+                        is3D: true
+            
+        };
 
-     console.log("type is ", typeof type);
-     console.dir(type);
+    //
      
      var chart = type;
      console.log("type of chart: " + typeof chart);
-     console.dir(chart);
-        google.visualization.events.addListener(chart, 'select', selectHandler(chart));
+     
+      //  google.visualization.events.addListener(chart, 'select', selectHandler);
         chart.draw(data, options);
 }
 

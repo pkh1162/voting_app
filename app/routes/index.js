@@ -46,8 +46,8 @@ module.exports = function (app, passport) {
         
 
     app.route('/')
-        .get(isLoggedIn, function (req, res) {
-            res.sendFile(path + '/public/index.html');
+        .get(function (req, res) {
+            res.sendFile(path + '/public/homePage.html');
         });
         
         
@@ -59,7 +59,7 @@ module.exports = function (app, passport) {
     app.route("/logout")
         .get(function(req, res){
             req.logout();
-            res.redirect("/login");
+            res.redirect("/public/homePage.html");
         });
     
     
@@ -113,6 +113,9 @@ module.exports = function (app, passport) {
 	app.route("/getSingle/:pollId")
 	    .get(userPollHandler.getSinglePoll);
 	    
+	app.route("/getSuggestions/:pollId")
+	    .get(userPollHandler.getSuggestions);
+	    
 	    
 	app.route("/voteInc/:optionId/:pollId")
 	    .post(userPollHandler.addVote);
@@ -125,16 +128,39 @@ module.exports = function (app, passport) {
 	    
 	app.route("/home")
 	    .get(function(req, res){
-	        res.sendFile(path + "/public/homePage.html");
+	        if (req.isAuthenticated()){
+	            res.sendFile(path + "/public/homeLoggedIn.html"); 
+	        }
+	        else{
+	            res.sendFile(path + "/public/homePage.html");    
+	        }
+	        
 	    })
 	    
 	    
-	 app.route("/sendSuggestion/:idea/:pollId")
+	app.route("/sendSuggestion/:idea/:pollId")
 	    .post(userPollHandler.notify);
 	        
-	 app.route("/getNotifications")
+	app.route("/getNotifications")
 	    .get(userPollHandler.getNotifications);
+	 
+	app.route("/controlNote/:noteId")
+	    .post(userPollHandler.implementNote)
+	    .delete(userPollHandler.deleteNote)
+	
+	app.route("/addOption/:message/:pollId")
+	    .post(userPollHandler.addOption)
 	        
 	    
-	    
+    app.route("/signOut")
+        .get(isLoggedIn, function(req, res){
+             req.logout();
+             res.redirect("/login");
+        })
 };
+
+/*
+if (req.isAuthenticated()){
+                res.sendFile(path + "/public/homeLoggedIn.html");
+            }   
+            */
