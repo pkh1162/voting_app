@@ -14,7 +14,7 @@
     
     
     function random (data){
-        console.log("hello");
+        //console.log("hello");
     }
     
     
@@ -42,7 +42,7 @@
     
     
     ajaxFunctions.ready(ajaxFunctions.ajaxRequest("GET", appUrl + "/getSingle/" + window.location.pathname.slice(10), function(data){
-        console.log("heloo from the future", data);
+        //console.log("heloo from the future", data);
         var jsonData = JSON.parse(data);
     
         initPoll(jsonData);

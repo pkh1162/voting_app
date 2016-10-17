@@ -117,8 +117,8 @@ function UserPollHandler () {
 						if(err){
 							throw err;
 						}
-						console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
-						console.log(incrementedData);
+			//			console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
+			//			console.log(incrementedData);
 						res.json(incrementedData);
 						
 					})	
@@ -126,9 +126,9 @@ function UserPollHandler () {
 	
 	this.addVote = function(req, res){
 	
-		console.log("Params sent with addVote are:  " + req.params.optionId + "::     and pollId:   " + req.params.pollId);
+	//	console.log("Params sent with addVote are:  " + req.params.optionId + "::     and pollId:   " + req.params.pollId);
 		
-		
+		console.log("in add vote");
 		var optionChosen = req.params.optionId
 		var pollId = req.params.pollId;
 	    
@@ -142,13 +142,13 @@ function UserPollHandler () {
 		     	var indexOfPick = 999;
 				for (var i in pollFound.pollData.votes){
 					if(pollFound.pollData.votes[i]._id == optionChosen){
-						console.log("you picked this: " + optionChosen);
+			//			console.log("you picked this: " + optionChosen);
 						indexOfPick = i;
 					}
 				}
 				
 				//console.log("lfjkfdlkjfd");
-				console.log("your pick is at index: " + indexOfPick);
+		//		console.log("your pick is at index: " + indexOfPick);
 				
 				
 				var updateQuery = {};
@@ -163,8 +163,9 @@ function UserPollHandler () {
 						if(err){
 							throw err;
 						}
-						console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
-						console.log(incrementedData);
+		//				console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
+		//				console.log(incrementedData);
+		console.log("just before json sent in add vote");
 						res.json(incrementedData);
 						
 					})

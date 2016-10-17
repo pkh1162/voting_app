@@ -47,13 +47,13 @@ var prepareTheData = function(chartData, element, type){
           ['Pepperoni', 2]
         ]);
 */
-       // console.log(x.toObject());
+       // //console.log(x.toObject());
         //data.addRow(x);
        
         // Set chart options
         var options = {
-                       'width':"100%",
-                       'height':"100%",
+                       'width':"350",
+                       'height':"300",
                         colors: ['#337ab7', '#eee', 'red', 'green', 'yellow'],
                         is3D: true
             
@@ -62,7 +62,7 @@ var prepareTheData = function(chartData, element, type){
     //
      
      var chart = type;
-     console.log("type of chart: " + typeof chart);
+     //console.log("type of chart: " + typeof chart);
      
       //  google.visualization.events.addListener(chart, 'select', selectHandler);
         chart.draw(data, options);
@@ -70,7 +70,7 @@ var prepareTheData = function(chartData, element, type){
 
 var selectHandler = function(chart){
     
-    //console.log(chart.getSelection());
+    ////console.log(chart.getSelection());
 }
 
 var selectChartType = function(){
@@ -81,7 +81,7 @@ var selectChartType = function(){
 var objToArray = function(votesObj, data) {
     var arr = [];
     for (var i in votesObj){
-        //console.log(votesObj[i]);
+        ////console.log(votesObj[i]);
         var str = votesObj[i].opt.toString();
         var num = parseInt(votesObj[i].nbrVotes);
         //var temp = ([str, num]);
@@ -90,6 +90,6 @@ var objToArray = function(votesObj, data) {
         
     }
     console.dir(arr);
-    console.log(arr);
+    //console.log(arr);
     return arr;
 }

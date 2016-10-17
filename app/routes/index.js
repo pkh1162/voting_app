@@ -2,7 +2,8 @@
 
 var path = process.cwd();
 
-var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
+
+//var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 var UserPollHandler = require(path + "/app/controllers/userPollHandler.server.js");
 
 module.exports = function (app, passport) {
@@ -13,12 +14,18 @@ module.exports = function (app, passport) {
             return next();
         }
         else{
-            res.redirect("/login");
+            res.redirect("/home");
         }
     }
     
+    
+    function hasVoted(req, res, next){
+        next();
+        
+    }
+    
     var userPollHandler = new UserPollHandler();
-    var clickHandler = new ClickHandler();
+   // var clickHandler = new ClickHandler();
 
 /*
     app.route("/home")
@@ -27,6 +34,54 @@ module.exports = function (app, passport) {
         })
   */
   
+  app.route("/cookie/:pollId")
+    .get(function(req, res){
+        
+        
+        if (req.cookies.cookieName == undefined){
+          //  console.log("in cookie function");
+            var value = {
+                votedOn : [req.params.pollId]
+            }
+            
+            res.cookie("cookieName", value, {maxAge : 1000*100}).send("true");
+        }
+        else {
+          // console.log("in else of cookiePolls");  
+            var cookiePolls = req.cookies.cookieName.votedOn;
+            
+            
+            if (cookiePolls.indexOf(req.params.pollId) === -1){
+             
+            
+            cookiePolls.push(req.params.pollId);
+            
+             var val = {
+                votedOn : cookiePolls
+            }
+           // console.log("before add array", req.cookies.cookieName.votedOn);
+            
+            res.cookie("cookieName", val, {maxAge : 1000*60*60*24*7});  //Cookie expires after one week
+            //console.log("affter add array", req.cookies.cookieName.votedOn);
+            
+                res.send("true");
+                
+            }
+            
+            else {
+                res.send("false");       
+            }
+         
+           
+           
+            // res.cookie("cookieName", value, {maxAge : 1000*100}).send(req.cookies);
+        }
+        
+
+    
+    })
+    
+  
     app.route("/myProfile")
         .get(isLoggedIn, function(req, res){
             res.sendFile(path + "/public/myProfile.html");
@@ -34,7 +89,7 @@ module.exports = function (app, passport) {
         
         
         app.route("/newPoll")
-            .get(function(req, res){
+            .get(isLoggedIn, function(req, res){
                 res.sendFile(path + "/public/newPoll.html");
             })
            
@@ -86,10 +141,7 @@ module.exports = function (app, passport) {
     }));
 
 
-    app.route('/api/:id/clicks')
-		.get(isLoggedIn, clickHandler.getClicks)
-		.post(isLoggedIn, clickHandler.addClick)
-		.delete(isLoggedIn, clickHandler.resetClicks);
+
 		
 		
 	
@@ -118,7 +170,7 @@ module.exports = function (app, passport) {
 	    
 	    
 	app.route("/voteInc/:optionId/:pollId")
-	    .post(userPollHandler.addVote);
+	    .post(hasVoted, userPollHandler.addVote);
 	    
 	    
 	app.route("/editPoll/:pollId")
@@ -155,7 +207,7 @@ module.exports = function (app, passport) {
     app.route("/signOut")
         .get(isLoggedIn, function(req, res){
              req.logout();
-             res.redirect("/login");
+            
         })
 };
 

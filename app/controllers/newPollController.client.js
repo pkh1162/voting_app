@@ -14,7 +14,7 @@
     
     
     function random (data){
-        console.log("hello");
+        ////console.log("hello");
     }
     
     
@@ -73,7 +73,7 @@
         
         if ($(".question").val().trim() === ""){
                 event.preventDefault();
-                console.log($(".question").val());
+                ////console.log($(".question").val());
                 $(".question").css("box-shadow", "0px 0px 20px 5px red");
                 addWarning(".question");
                 
@@ -82,7 +82,7 @@
         $("input[name=option]").each(function(i, opt){
             if ($(opt).val().trim() == ""){
                 event.preventDefault();
-                console.log("You need to enter something");
+                ////console.log("You need to enter something");
                 $(opt).css("box-shadow", "0px 0px 20px 5px red");
                 addWarning(opt);
             }

@@ -43,7 +43,7 @@ module.exports = function(passport){
                 else {
                     var newUser = new User();
                     
-                    console.log("new user");
+                    //console.log("new user");
                     
                     newUser.github.id = profile.id;
                     newUser.github.username = profile.username;

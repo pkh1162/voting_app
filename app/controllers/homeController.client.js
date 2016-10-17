@@ -5,10 +5,10 @@
     
     
      function userUpdate(userData){
-        
+       // //console.log("user data is: ", userData);
         var userInfoObj = JSON.parse(userData);
         $("#userName").html(userInfoObj.username);
-        console.log("username is ", userInfoObj.username);
+     //   //console.log("username is ", userInfoObj.username);
      //   userName.innerHTML = userInfoObj.username;
     }
     
@@ -59,21 +59,26 @@
             $("#suggestions").html("<input id='sugOption' type='textarea' rows='1' cols='50' wrap='hard' class='form-control' placeholder='Make a pleasant suggestion'><span class='input-group-btn'><button class='btn btn-default' id='tick' type='button'>Suggest</button></span>")
             $("#tick").on("click", function(){
                 
-                
+               $("#sugOption").css("box-shadow", "none");
 
                 
                // </span><span class='glyphicon glyphicon-ok' id='tick'></span>
                 
-                if($("#sugOption").val().length !== 0){
+                if($("#sugOption").val().trim().length !== 0){
                     var idea = $("#sugOption").val();
                     var pollId = $("#selectedPoll button").attr("pollId").slice(4);
                     
-                    ajaxFunctions.ajaxRequest("POST", appUrl + "/sendSuggestion/" + encodeURI(idea) + "/" + pollId, function(){
+                        ajaxFunctions.ajaxRequest("POST", appUrl + "/sendSuggestion/" + encodeURI(idea) + "/" + pollId, function(){
                         $("#suggestions").empty();
                         $(".rmvSuggestions").html("");
-                        console.log("idea sent");
+                    //    //console.log("idea sent");
                     })
                 }
+                else {
+                    $("#sugOption").css("box-shadow", "0px 0px 20px 5px red");
+                      $("#sugOption").attr("placeholder", "You need to write something here");
+                }            
+                
             })
             
             
@@ -87,10 +92,28 @@
         $(".option").on("click", function(){
             var pollId = $(this).attr("pollId").slice(4);
             var optId = $(this).attr("optId").slice(3);
-            
+           
+           /* 
             ajaxFunctions.ajaxRequest("POST", appUrl + "/voteInc/" + optId + "/" + pollId, function(){
                 ajaxFunctions.ajaxRequest("GET", appUrl + "/getSingle/" + pollId, displayOptions)
             })
+            */
+            
+            ajaxFunctions.ajaxRequest("GET", appUrl + "/cookie/" + pollId, function(votedOrNot){
+                
+                if (votedOrNot == "true"){
+                    ajaxFunctions.ajaxRequest("POST", appUrl + "/voteInc/" + optId + "/" + pollId, function(data){
+                        alert("Your vote has been cast!");
+                        ajaxFunctions.ajaxRequest("GET", appUrl + "/getSingle/" + pollId, displayOptions)
+                    })
+                }
+                else {
+                    alert("You can only vote once, and your vote has already been cast!");
+                }
+            })
+            
+            
+            
         })
         
         
@@ -102,9 +125,9 @@
     
     
     ajaxFunctions.ready(ajaxFunctions.ajaxRequest("GET", appUrl + "/api/id:", userUpdate));
-    
     ajaxFunctions.ready(ajaxFunctions.ajaxRequest("GET", appUrl + "/getPolls", function(data){
-        console.log("done");
+    
+       // //console.log("done");
 //        $("#publicPolls").html(data);
         var jsonData = JSON.parse(data);
         
@@ -119,7 +142,7 @@
             $(".rmvSuggestions").html("");
 
             var id = $(this).attr("pollId").slice(4);
-            console.log($(this).attr("pollId"));
+        //    //console.log($(this).attr("pollId"));
             ajaxFunctions.ajaxRequest("GET", appUrl + "/getSingle/" + id, function(data){
             displayOptions(data);
                // $("#selectedPoll").html(data);
@@ -127,7 +150,7 @@
             
         })
         
-    }))
+    }));
     
     /*
     $(".selPollTitle").on("click", function(){
