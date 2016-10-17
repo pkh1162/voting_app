@@ -165,7 +165,7 @@ function UserPollHandler () {
 						}
 		//				console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
 		//				console.log(incrementedData);
-		console.log("just before json sent in add vote");
+		//console.log("just before json sent in add vote");
 						res.json(incrementedData);
 						
 					})

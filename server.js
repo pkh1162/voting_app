@@ -39,7 +39,7 @@ app.use(passport.session());
 
 routes(app, passport);
 
-app.listen(process.env.PORT || 8080, function () {
+app.listen(process.env.PORT, function () {
         console.log("Im listening");
     
 });
