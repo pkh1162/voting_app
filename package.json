@@ -19,5 +19,8 @@
     "passport": "^0.3.2",
     "passport-github": "^1.1.0",
     "request": "^2.74.0"
+  },
+   "engines": {
+    "node": "4.5.0"
   }
 }
