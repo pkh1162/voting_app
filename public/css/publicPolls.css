@@ -71,7 +71,7 @@ body {
 
 
 #publicPolls li :hover, #publicPolls li :focus{
-    background: white;
+    background: #eee;
 }
 
 
