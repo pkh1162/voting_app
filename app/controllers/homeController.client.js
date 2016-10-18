@@ -12,19 +12,44 @@
      //   userName.innerHTML = userInfoObj.username;
     }
     
-    
-    
     $("#suggestOption").hide();
+    
+    
     
     function displayOptions(pollInfo) {
         
         var jsonInfo = JSON.parse(pollInfo);
+        
+        var numberOfVotes = jsonInfo.pollData.votes.reduce((prevVal, val) => {
+            return prevVal + val.nbrVotes;
+        }, 0); 
+        
+        
+        $("#suggestOption").hide();    
+        $("#googleChart").hide();    
+            
+        
         
         loadTheChart(jsonInfo, "googleChart");
         $(".selPollTitle").html(jsonInfo.pollData.pollName);
         $("#selectedPoll").empty();
         
         var pollId = jsonInfo._id;
+        
+        
+         
+        
+        
+        if (numberOfVotes !== 0){
+            if ($("#googleChart").css("display") == "none"){
+                $("#googleChart").slideDown(1500);    
+            }
+            
+            
+        }
+        
+        $("#selectedPoll").hide();
+       
         
         for (var i in jsonInfo.pollData.votes){
             var poll = jsonInfo.pollData.votes[i];
@@ -36,7 +61,12 @@
             $("#selectedPoll").append(option);
         }
         
-        $("#suggestOption").show();
+        $("#selectedPoll").slideDown(2000, function(){
+            $("#suggestOption").show();
+        });
+        
+        
+        
         
         configOptEvents();
         
@@ -131,10 +161,12 @@
 //        $("#publicPolls").html(data);
         var jsonData = JSON.parse(data);
         
+        
         for (var i in jsonData){
             var button = "<li><a href='#' class='publicPoll' pollId='poll" + jsonData[i]._id + "'>" + jsonData[i].pollData.pollName + "</a></li>";
             $("#publicPolls").append(button);
         }
+      
         
         $(".publicPoll").on("click", function(e){
             e.preventDefault();

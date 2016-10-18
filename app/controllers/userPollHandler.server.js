@@ -13,7 +13,7 @@ function UserPollHandler () {
         Users.findOne({"github.id" : req.user.github.id}, {"_id" : false}).populate("userPolls.poll").exec(function(err, result){
             
             if (err){
-                console.log("error with getting polls");
+                //console.log("error with getting polls");
                 throw err;
             }
             
@@ -40,9 +40,9 @@ function UserPollHandler () {
     
     
     this.getNewPoll = function(req, res) {
-      //  console.log("in addPoll");
-      //  console.log(req.body);
-      //  console.log(typeof req);
+      //  //console.log("in addPoll");
+      //  //console.log(req.body);
+      //  //console.log(typeof req);
         res.json({});
         
     
@@ -53,7 +53,7 @@ function UserPollHandler () {
     this.addPoll = function(req, res, next){
     	
     	Users.findOne({"github.id" : req.user.github.id}).exec(function(err, user){
-    		console.log(req.body);
+    		//console.log(req.body);
     		
     		var newPoll = new Poll();
     		
@@ -79,8 +79,8 @@ function UserPollHandler () {
     		newPoll.user.id = req.user.github.id
     		newPoll.pollData.votes = setOptions(req.body.option)
     		newPoll.save(function(err, savedPoll){
-    			console.log(newPoll);
-    		    console.log(newPoll.pollData.votes);
+    			//console.log(newPoll);
+    		    //console.log(newPoll.pollData.votes);
     		    //newPoll.pollData.votes = 
                 //res.json(savedPoll);	
     		
@@ -117,8 +117,8 @@ function UserPollHandler () {
 						if(err){
 							throw err;
 						}
-			//			console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
-			//			console.log(incrementedData);
+			//			//console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
+			//			//console.log(incrementedData);
 						res.json(incrementedData);
 						
 					})	
@@ -126,9 +126,9 @@ function UserPollHandler () {
 	
 	this.addVote = function(req, res){
 	
-	//	console.log("Params sent with addVote are:  " + req.params.optionId + "::     and pollId:   " + req.params.pollId);
+	//	//console.log("Params sent with addVote are:  " + req.params.optionId + "::     and pollId:   " + req.params.pollId);
 		
-		console.log("in add vote");
+		//console.log("in add vote");
 		var optionChosen = req.params.optionId
 		var pollId = req.params.pollId;
 	    
@@ -142,13 +142,13 @@ function UserPollHandler () {
 		     	var indexOfPick = 999;
 				for (var i in pollFound.pollData.votes){
 					if(pollFound.pollData.votes[i]._id == optionChosen){
-			//			console.log("you picked this: " + optionChosen);
+			//			//console.log("you picked this: " + optionChosen);
 						indexOfPick = i;
 					}
 				}
 				
-				//console.log("lfjkfdlkjfd");
-		//		console.log("your pick is at index: " + indexOfPick);
+				////console.log("lfjkfdlkjfd");
+		//		//console.log("your pick is at index: " + indexOfPick);
 				
 				
 				var updateQuery = {};
@@ -163,16 +163,16 @@ function UserPollHandler () {
 						if(err){
 							throw err;
 						}
-		//				console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
-		//				console.log(incrementedData);
-		//console.log("just before json sent in add vote");
+		//				//console.log("nbr votes:   " + incrementedData.pollData.votes[0].nbrVotes);
+		//				//console.log(incrementedData);
+		////console.log("just before json sent in add vote");
 						res.json(incrementedData);
 						
 					})
 				
 				
 				
-		    // 	console.log(pollData.pollData.votes.find(x=> x._id == "57d6c174002dfd0861904c63").nbrVotes);
+		    // 	//console.log(pollData.pollData.votes.find(x=> x._id == "57d6c174002dfd0861904c63").nbrVotes);
 		     	
 		     
 		   
@@ -201,7 +201,7 @@ function UserPollHandler () {
 
     this.deletePoll = function(req, res){
     	
-    	console.log("this is the delted poll id", req.params.pollId);
+    	//console.log("this is the delted poll id", req.params.pollId);
         Poll
         	.findOne({"_id" : req.params.pollId}).remove().exec(function(err, result){
         		
@@ -216,13 +216,13 @@ function UserPollHandler () {
         				throw err;
         			}
         			
-        			console.log("in decrement");
+        			//console.log("in decrement");
         			var filterDelNotes = user.notifications.filter((note) => note.pollId !== req.params.pollId);
-        			console.log("after filter");
+        			//console.log("after filter");
         			Users.findOneAndUpdate({"github.id" : req.user.github.id},{ $set : {"notifications" : filterDelNotes}}).exec(function(err, r){
-        				console.log("this is r: ", r);
+        				//console.log("this is r: ", r);
         		
-        		        console.log("hello");
+        		        //console.log("hello");
         			    res.json(r);
         		
         		
@@ -239,7 +239,7 @@ function UserPollHandler () {
     
     this.notify = function(req, res){
     
-    	console.log("The notification is:" + req.params.idea + req.params.pollId);
+    	//console.log("The notification is:" + req.params.idea + req.params.pollId);
     	//find poll. Get user id.
     	//use user id to get user.
     	//update users notifications with req params.
@@ -261,7 +261,7 @@ function UserPollHandler () {
     				if(err){
     					throw err;
     				}
-    				console.log(updatedNotifications);
+    				//console.log(updatedNotifications);
     				
     				res.json({});		
     			})
@@ -384,7 +384,7 @@ function UserPollHandler () {
 		
 		//find user
 			//find note and delete it.
-			console.log("in the deleteNote function");
+			//console.log("in the deleteNote function");
 		
 		Users.findOne({"github.id" : req.user.github.id})
 			.exec(function(err, user){
@@ -398,7 +398,7 @@ function UserPollHandler () {
 				
 				
 				
-				console.log("new notes are", newNotes);
+			//	//console.log("new notes are", newNotes);
 				
 				
 				Users.findOneAndUpdate({"github.id" : req.user.github.id}, {$set : {notifications : newNotes}})
@@ -408,7 +408,7 @@ function UserPollHandler () {
 							throw err;
 						}
 						
-						console.log("I think I pulled the notification :)");		
+						//console.log("I think I pulled the notification :)");		
 						res.json(updatedNotes);				
 						
 					});

@@ -89,7 +89,7 @@ var objToArray = function(votesObj, data) {
         data.addRow([str, num]);
         
     }
-    console.dir(arr);
+    //console.dir(arr);
     //console.log(arr);
     return arr;
 }

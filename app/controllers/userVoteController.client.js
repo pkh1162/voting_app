@@ -189,14 +189,28 @@
     function showPoll(pollToDisplay) {
         //showVotes(pollToDisplay);
         var pollClicked = JSON.parse(pollToDisplay);
-        
+        $("#googleChart").hide();
         $("#suggestOption").show();
         loadTheChart(pollClicked, "googleChart");
         $(".selPollTitle").html(pollClicked.pollData.pollName);
         $("#selectedPoll").empty();
         
+        var noOfVotes = pollClicked.pollData.votes.reduce((prevVal, val) => {
+            return prevVal + val.nbrVotes;
+        }, 0); 
+        
+        
+        if (noOfVotes !== 0){
+            $("#googleChart").slideDown(1500);
+        }
+        
+        
+        
+        
         var pollId = pollClicked._id;
         
+      
+         $("#selectedPoll").hide();  
         for (var i in pollClicked.pollData.votes){
             var poll = pollClicked.pollData.votes[i];
             var name = poll.opt;
@@ -205,17 +219,12 @@
             
             var option = "<button pollId='poll" + pollId + "' optId='opt" + optId + "' class='option btn btn-default'><p>" + name + "</p><span class='badge'>" + votes +"</span></button>";
             $("#selectedPoll").append(option);
-            
-          //  matchHeight();
-        
         }
+        $("#selectedPoll").slideDown(2000);
         
         
-        function matchHeight() {
-            var height = $(".pollSlider").height();
-            //console.log(height);
-            $("#pollList").height(height + 35);
-        }
+        
+     
         
         //notification logic here
         ajaxFunctions.ajaxRequest("GET", appUrl + "/getSuggestions/" + pollId, displaySuggestions);
