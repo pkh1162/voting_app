@@ -49,13 +49,19 @@ var prepareTheData = function(chartData, element, type){
 */
        // //console.log(x.toObject());
         //data.addRow(x);
-       
+      //  colors: ['#337ab7', '#eee', 'red', 'green', 'yellow'],
+      // legend: {position: 'right', textStyle: {color: 'blue', fontSize: 12}}
         // Set chart options
         var options = {
                        'width':"350",
                        'height':"300",
-                        colors: ['#337ab7', '#eee', 'red', 'green', 'yellow'],
-                        is3D: true
+                        is3D: false,
+                        chartArea: {  width: "100%", height: "100%", color: "black" },
+                        legend: {alignment: "center", position: 'top', textStyle: {width: 100, color: 'blue', fontSize: 12}},
+                        pieSliceTextStyle : {color: "black", fontSize: 16},
+                        pieSliceText: 'none',
+                        tooltip: {textStyle: {color: 'black', fontSize: 16}, showColorCode: true},
+                        pieHole: 0.4
             
         };
 
