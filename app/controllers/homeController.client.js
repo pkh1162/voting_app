@@ -163,7 +163,7 @@
         
         
         for (var i in jsonData){
-            var button = "<li><a href='#' class='publicPoll' pollId='poll" + jsonData[i]._id + "'>" + jsonData[i].pollData.pollName + "</a></li>";
+            var button = "<li><a href='' class='publicPoll' pollId='poll" + jsonData[i]._id + "'>" + jsonData[i].pollData.pollName + "</a></li>";
             $("#publicPolls").append(button);
         }
       
